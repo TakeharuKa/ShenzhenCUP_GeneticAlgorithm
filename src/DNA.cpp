@@ -15,11 +15,11 @@ double dis(const int &n1, const int &n2)
 		+ (x[n1][1] - x[n2][1]) * (x[n1][1] - x[n2][1]));
 }
 
-void bloodfill(int now)
+void DNA::bloodfill(int now)
 {
 	bloodfill_OK[now] = 1;
 	for(int i = 1; i <= n; i ++)
-		if(status[i] == 0 dis(now, i) <= 50 && !bloodfill_OK[i])
+		if(status[i] == 0 && dis(now, i) <= 50 && !bloodfill_OK[i])
 			bloodfill(i);
 }
 
@@ -38,9 +38,9 @@ void DNA::calc_val()
 			count0 ++;
 		}
 
-	price_val = 5 * (n - count0) + 10 * count0 + 50 * countconnections;
+	price_val = 5 * (n - count0) + 10 * count0 + 50 * ((countconnections - 1) / 8 + 1);
 
-	val = 1/dis_val;
+	val = 1/price_val;
 	val = val * val * val;
 }
 
@@ -237,13 +237,13 @@ void DNA::Crossover(DNA &that)
 	for(int ii = 0; ii < listthis.size() / 3; ii ++)
 		newDNA1.status[listthis[ii]] = 0;
 	for(int i = 1; i <= n; i ++)
-		if(findroot(i) != 0 && nowDNA1.status[findroot(i)] == 0)
+		if(findroot(i) != 0 && newDNA1.status[findroot(i)] == 0)
 			newDNA1.status[i] = status[i];
 
 	for(int i = 0; i < listthat.size() / 3; i ++)
 		newDNA1.status[listthat[i]] = 0;
 	for(int i = 1; i <= n; i ++)
-		if(that.findroot(i) != 0 && nowDNA1.status[that.findroot(i)] == 0)
+		if(that.findroot(i) != 0 && newDNA1.status[that.findroot(i)] == 0)
 			newDNA1.status[i] = that.status[i];
 
 	newDNA1.fill();
@@ -252,19 +252,21 @@ void DNA::Crossover(DNA &that)
 	for(int i = listthat.size() / 3; i < listthat.size() * 2 / 3; i ++)
 		newDNA2.status[listthat[i]] = 0;
 	for(int i = 1; i <= n; i ++)
-		if(that.findroot(i) != 0 && nowDNA2.status[that.findroot(i)] == 0)
-			newDNA2.status[i] = that.status[j];
+		if(that.findroot(i) != 0 && newDNA2.status[that.findroot(i)] == 0)
+			newDNA2.status[i] = that.status[i];
 
 	for(int i = listthis.size() / 3; i < listthis.size() * 2 / 3; i ++)
 		newDNA2.status[listthis[i]] = 0;
 	for(int i = 1; i <= n; i ++)
-		if(findroot(i) != 0 && nowDNA2.status[findroot(i)] == 0)
-			newDNA2.status[i] = status[j];
+		if(findroot(i) != 0 && newDNA2.status[findroot(i)] == 0)
+			newDNA2.status[i] = status[i];
 
 	newDNA2.fill();
 
 	that = newDNA2;
-	this = newDNA1;
+
+	for(int i = 1; i <= n; i ++)
+		status[i] = newDNA1.status[i];
 }
 
 

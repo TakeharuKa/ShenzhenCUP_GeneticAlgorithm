@@ -3,7 +3,7 @@ sSOURCES=$(wildcard *.cpp)
 HEADERS=$(wildcard *.h)
 lOBJECTS=$(lSOURCES:%.cxx=%.o)
 sOBJECTS=$(sSOURCES:%.cpp=%.o)
-TARGET=homework4.exe
+TARGET=hw2
 
 all: $(TARGET) $(LIB)
 $(TARGET): $(sOBJECTS) $(HEADERS) $(LIB)
