@@ -161,7 +161,7 @@ void DNA::fill()
 		while(ii < unchosen.size())
 		{
 			int i = unchosen[ii];
-			int jj;
+			int jj = 0;
 			while(jj < available.size())
 			{
 				int j = available[jj];
@@ -179,14 +179,20 @@ void DNA::fill()
 					childs[j] ++;
 					childs1[j] ++;
 
+					occupied[i] = 0;
+					if(childs1[j] < 4 && childs[j] < 6)
+						available.push_back(i);
 					break;
 				}
 				else if(status[j] != 0 && dis(i, j) <= 10)
 				{
 					childs[p] ++;
 					status[i] = (status[j] << 10) + j;
-					occupied[j] = 1;
 
+					occupied[j] = 1;
+					occupied[i] = 0;
+					if(childs1[p] < 4 && childs[p] < 6)
+						available.push_back(i);
 					break;
 				}
 
