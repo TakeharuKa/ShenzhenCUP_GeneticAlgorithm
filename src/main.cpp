@@ -73,6 +73,7 @@ void choosen()
 		now[i] = nowp[i];
 }
 
+const double PI = 3.1415926535898;
 int main(int argc, char *argv[]) 
 {
 	srand(time(0));
@@ -83,10 +84,17 @@ int main(int argc, char *argv[])
 
 	m = n * 50;                                 /* the size of population */
 
-	T = n * 300;
+	T = 100;
 
-	for(int i = 0; i < n; i ++)
+	for(int i = 1; i <= n; i ++)
+	{
 		cin >> x[i][0] >> x[i][1];
+		x[i][0] *= PI;
+		x[i][0] /= 180;
+
+		x[i][1] *= PI;
+		x[i][1] /= 180;
+	}
 
 	now = new DNA[m];
 	nowp = new DNA[m];
@@ -155,7 +163,13 @@ int main(int argc, char *argv[])
 		ii ++;
 	}
 
-
+	for(int i = 1; i <= n; i ++)
+	{
+		if(now[mip].status[i] == 0)
+			printf("0\n");
+		else
+			printf("%d\n", (now[mip].status[i] & 1023));
+	}
 
 	return 0;
 }

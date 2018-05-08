@@ -11,8 +11,9 @@ extern int n;
 
 double dis(const int &n1, const int &n2)
 {
-	return sqrt((x[n1][0] - x[n2][0]) * (x[n1][0] - x[n2][0]) 
-		+ (x[n1][1] - x[n2][1]) * (x[n1][1] - x[n2][1]));
+	return sqrt((x[n1][0] - x[n2][0]) * (x[n1][0] - x[n2][0]) + (x[n1][1] - x[n2][1]) * (x[n1][1] - x[n2][1]));
+
+	//return 6378 * acos(sin(x[n1][1]) * sin(x[n2][1]) + cos(x[n1][1]) * cos(x[n2][1]) * cos(x[n1][0] - x[n2][0]));
 }
 
 void DNA::bloodfill(int now)
@@ -71,12 +72,13 @@ int DNA::findroot(int now)
 {
 	if(status[now] == 0)
 		return now;
-	if(father(now) != 0)
-		return father(now);
-	if(grandfather(now) != 0)
-		return grandfather(now);
 	if(grandgrandfather(now) != 0)
 		return grandgrandfather(now);
+	if(grandfather(now) != 0)
+		return grandfather(now);
+	if(father(now) != 0)
+		return father(now);
+
 	return 0;
 }
 
@@ -185,10 +187,10 @@ void DNA::fill()
 					childs[p] ++;
 					status[i] = (status[j] << 10) + j;
 					/*
-					cerr << j << " b " << status[j] << endl;
-					cerr << i << " b " << status[i] << endl;
-					cerr << finddepth(j) << endl;
-					*/
+					   cerr << j << " b " << status[j] << endl;
+					   cerr << i << " b " << status[i] << endl;
+					   cerr << finddepth(j) << endl;
+					   */
 
 					occupied[j] = 1;
 					occupied[i] = 0;
@@ -228,7 +230,7 @@ void DNA::Crossover(DNA &that)
 	{
 		newDNA1.status[i] = newDNA2.status[i] = -1;
 
-		if(status[i] == that.status[i])
+		if(status[i] == that.status[i] && findroot(i) == that.findroot(i))
 			newDNA1.status[i] = newDNA2.status[i] = status[i];
 		else if(status[i] == 0)
 			listthis.push_back(i);
@@ -284,16 +286,6 @@ void DNA::Crossover(DNA &that)
 			p2 = 1;
 	}
 
-	if(p1 == 0)
-	{
-		cerr << "ERROR1" << endl;
-		while(1);
-	}
-	if(p2 == 0)
-	{
-		cerr << "ERROR2" << endl;
-		while(1);
-	}
 }
 
 
@@ -314,18 +306,26 @@ void DNA::mutation()
 			tokill.push_back(i);
 	}
 
+
+
 	for(int i = 0; i < tokill.size(); i ++)
 		status[tokill[i]] = -1;
 
+
 	fill();
 
-	bool p1 = 0;
+	bool p1 = 0, p2 = 1, p3 = 0;
 	for(int i = 1; i <= n; i ++)
 	{
 		if(status[i] == 0)
 			p1 = 1;
+		if(status[i] < 0)
+			p2 = 0;
+		if(status[i] != 0 && finddepth(i) == 1)
+			p3 = 1;
 	}
 
+/*
 	if(p1 == 0)
 	{
 		cerr << "ERROR3" << endl;
@@ -334,13 +334,7 @@ void DNA::mutation()
 		while(1);
 	}
 
-	for(int i = 1; i <= n; i ++)
-	{
-		if(status[i] < 0)
-			p1 = 0;
-	}
-
-	if(p1 == 0)
+	if(p2== 0)
 	{
 		cerr << "ERROR4" << endl;
 		for(int i = 1; i <= n; i ++)
@@ -348,6 +342,15 @@ void DNA::mutation()
 		while(1);
 	}
 
+	if(p3== 0)
+	{
+		cerr << "ERROR5" << endl;
+		for(int i = 1; i <= n; i ++)
+			cerr << status[i] << endl;
+		while(1);
+	}
+	*/
 
 }
+
 
