@@ -101,12 +101,13 @@ int main(int argc, char *argv[])
 	}
 
 	int ii = 1;
+
+	int mip = 1;
 	while(T--)
 	{
 		choosen();
-//		Debug_printn();
-
-/*
+		mip = 0;
+		/*
 		bool flag = 0;
 		for(int i = 1; i < m; i ++)
 			if(now[i].price_val != now[i - 1].price_val)
@@ -117,6 +118,7 @@ int main(int argc, char *argv[])
 			*/
 
 		for(int i = 0; i < m; i ++)
+		{
 			if(rand1() <= pc)
 			{
 				int n2 = rand() % m;
@@ -126,25 +128,34 @@ int main(int argc, char *argv[])
 
 				now[i].Crossover(now[n2]);
 			}
+		}
 
 		for(int i = 0; i < m; i ++)
+		{
 			if(rand1() <= pm)
 			{
 				int n1 = rand() % m;
 				now[n1].mutation();
 			}
+		}
 
 		double mi = 2147483647;
 		for(int i = 0; i < m; i ++)
 		{
 			now[i].calc_val();
-			mi = min(mi, now[i].price_val);
+			if(now[i].price_val < mi)
+			{
+				mi = now[i].price_val;
+				mip = i;
+			}
 		}
 
 		cerr << endl;
 		cerr << "Turn #  " << ii << "	Current best price = " << mi << endl;
 		ii ++;
 	}
+
+
 
 	return 0;
 }
