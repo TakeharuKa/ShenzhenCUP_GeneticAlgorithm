@@ -84,12 +84,12 @@ int DNA::finddepth(int now)
 {
 	if(status[now] == 0)
 		return 0;
-	if(father(now) != 0)
-		return 1;
-	if(grandfather(now) != 0)
-		return 2;
 	if(grandgrandfather(now) != 0)
 		return 3;
+	if(grandfather(now) != 0)
+		return 2;
+	if(father(now) != 0)
+		return 1;
 
 	return 0;
 }
@@ -98,7 +98,6 @@ int root[MAXN];   /* num of SUZHUZHAN*/
 int len[MAXN];    /* length to SUZHUZHAN*/
 int childs1[MAXN], childs[MAXN]; /* childs1 <= 4, childs <= 6*/
 bool occupied[MAXN]; /* if type == 2, 1 means it has a child*/
-int list[MAXN];
 
 vector <int> unchosen;
 vector <int> unchosen2;
@@ -113,10 +112,6 @@ void DNA::fill()
 	unchosen.clear();
 	unchosen2.clear();
 	available.clear();
-
-	for(int i = 0; i < n; i ++)
-		list[i] = i + 1;
-	random_shuffle(list, list + n);
 
 	int count = n ;
 
@@ -141,7 +136,7 @@ void DNA::fill()
 		}
 
 
-	for(int i = 0; i <= n; i ++)
+	for(int i = 1; i <= n; i ++)
 	{
 		if(status[i] == -1)
 			unchosen.push_back(i);
@@ -167,7 +162,7 @@ void DNA::fill()
 				int j = available[jj];
 				int p = findroot(j);
 
-				if(childs1[p] >= 4 || childs[p] >= 6 || occupied[j] == 1)
+				if(childs1[p] >= 4 || childs[p] >= 6 || occupied[j] == 1 || finddepth(j) >= 3)
 				{
 					available.erase(available.begin() + jj);
 					continue;
@@ -176,11 +171,12 @@ void DNA::fill()
 				if(status[j] == 0 && dis(i, j) <= 20)
 				{
 					status[i] = j;
+					//cerr << i << " a " << status[i] << endl;
 					childs[j] ++;
 					childs1[j] ++;
 
 					occupied[i] = 0;
-					if(childs1[j] < 4 && childs[j] < 6)
+					if(childs1[j] < 4 && childs[j] < 6 && finddepth(i) < 3)
 						available.push_back(i);
 					break;
 				}
@@ -188,10 +184,15 @@ void DNA::fill()
 				{
 					childs[p] ++;
 					status[i] = (status[j] << 10) + j;
+					/*
+					cerr << j << " b " << status[j] << endl;
+					cerr << i << " b " << status[i] << endl;
+					cerr << finddepth(j) << endl;
+					*/
 
 					occupied[j] = 1;
 					occupied[i] = 0;
-					if(childs1[p] < 4 && childs[p] < 6)
+					if(childs1[p] < 4 && childs[p] < 6 && finddepth(i) < 3)
 						available.push_back(i);
 					break;
 				}
@@ -273,6 +274,26 @@ void DNA::Crossover(DNA &that)
 
 	for(int i = 1; i <= n; i ++)
 		status[i] = newDNA1.status[i];
+
+	bool p1 = 0, p2 = 0;
+	for(int i = 1; i <= n; i ++)
+	{
+		if(status[i] == 0)
+			p1 = 1;
+		if(that.status[i] == 0)
+			p2 = 1;
+	}
+
+	if(p1 == 0)
+	{
+		cerr << "ERROR1" << endl;
+		while(1);
+	}
+	if(p2 == 0)
+	{
+		cerr << "ERROR2" << endl;
+		while(1);
+	}
 }
 
 
@@ -281,12 +302,52 @@ void DNA::mutation()
 	int nowdel;
 	do{
 		nowdel = rand() % n + 1;
+		//cerr << "OMG" << endl;
 	} while(status[nowdel] != 0);
 
+	vector <int> tokill;
+	tokill.clear();
+
 	for(int i = 1; i <= n; i ++)
+	{
 		if(findroot(i) == nowdel)
-			status[i] = -1;
+			tokill.push_back(i);
+	}
+
+	for(int i = 0; i < tokill.size(); i ++)
+		status[tokill[i]] = -1;
+
 	fill();
+
+	bool p1 = 0;
+	for(int i = 1; i <= n; i ++)
+	{
+		if(status[i] == 0)
+			p1 = 1;
+	}
+
+	if(p1 == 0)
+	{
+		cerr << "ERROR3" << endl;
+		for(int i = 1; i <= n; i ++)
+			cerr << status[i] << endl;
+		while(1);
+	}
+
+	for(int i = 1; i <= n; i ++)
+	{
+		if(status[i] < 0)
+			p1 = 0;
+	}
+
+	if(p1 == 0)
+	{
+		cerr << "ERROR4" << endl;
+		for(int i = 1; i <= n; i ++)
+			cerr << status[i] << endl;
+		while(1);
+	}
+
 
 }
 

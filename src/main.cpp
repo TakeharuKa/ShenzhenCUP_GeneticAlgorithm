@@ -106,6 +106,16 @@ int main(int argc, char *argv[])
 		choosen();
 //		Debug_printn();
 
+/*
+		bool flag = 0;
+		for(int i = 1; i < m; i ++)
+			if(now[i].price_val != now[i - 1].price_val)
+				flag = 1;
+
+		if(flag == 0)
+			break;
+			*/
+
 		for(int i = 0; i < m; i ++)
 			if(rand1() <= pc)
 			{
@@ -131,7 +141,8 @@ int main(int argc, char *argv[])
 			mi = min(mi, now[i].price_val);
 		}
 
-		cerr << "Turn #" << ii << "	Current best price = " << mi << endl;
+		cerr << endl;
+		cerr << "Turn #  " << ii << "	Current best price = " << mi << endl;
 		ii ++;
 	}
 

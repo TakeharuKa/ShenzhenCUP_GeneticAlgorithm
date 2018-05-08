@@ -9,6 +9,6 @@
 #include <vector>
 #include <cstdlib>
 
-enum {MAXN = 55, MAXM = 55 * 55};
+enum {MAXN = 1050, MAXM = 1050};
 
 #endif
