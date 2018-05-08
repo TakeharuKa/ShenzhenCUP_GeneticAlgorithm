@@ -11,9 +11,9 @@ extern int n;
 
 double dis(const int &n1, const int &n2)
 {
-	return sqrt((x[n1][0] - x[n2][0]) * (x[n1][0] - x[n2][0]) + (x[n1][1] - x[n2][1]) * (x[n1][1] - x[n2][1]));
+	//return sqrt((x[n1][0] - x[n2][0]) * (x[n1][0] - x[n2][0]) + (x[n1][1] - x[n2][1]) * (x[n1][1] - x[n2][1]));
 
-	//return 6378 * acos(sin(x[n1][1]) * sin(x[n2][1]) + cos(x[n1][1]) * cos(x[n2][1]) * cos(x[n1][0] - x[n2][0]));
+	return 6378 * acos(sin(x[n1][1]) * sin(x[n2][1]) + cos(x[n1][1]) * cos(x[n2][1]) * cos(x[n1][0] - x[n2][0]));
 }
 
 void DNA::bloodfill(int now)
